@@ -1,169 +1,124 @@
-# Planner Pro - Frontend
+# 🎨 Planner Pro - Frontend
 
-Frontend do aplicativo Planner Pro, construído com React, Vite e Tailwind CSS, hospedado no Vercel.
+Interface moderna e responsiva para o sistema Planner Pro - Sistema completo de planejamento pessoal.
 
 ## 🚀 Tecnologias
 
-- **React** - Biblioteca JavaScript
-- **Vite** - Build tool
-- **Tailwind CSS** - Framework CSS
-- **Lucide React** - Ícones
-- **React Router** - Roteamento
+- **React 18** - Framework JavaScript
+- **Vite** - Build tool ultrarrápido
+- **TailwindCSS** - Estilização utilitária
+- **Lucide React** - Ícones modernos
+- **Chart.js** - Gráficos e dashboards
+- **React Router** - Navegação SPA
 
-## 📋 Pré-requisitos
+## ✨ Funcionalidades
 
-- Node.js 18+
-- Conta no Vercel
-- Git
-
-## 🔧 Instalação
-
-1. **Clone o repositório:**
-```bash
-git clone https://github.com/Wellevelton/frontend-pro-.git
-cd frontend-pro-
-```
-
-2. **Instale as dependências:**
-```bash
-npm install
-```
-
-3. **Configure as variáveis de ambiente:**
-```bash
-cp .env.example .env
-```
-
-4. **Inicie o servidor de desenvolvimento:**
-```bash
-npm run dev
-```
-
-## 🌐 Deploy no Vercel
-
-1. **Acesse o Vercel Dashboard**
-2. **Conecte o repositório GitHub**
-3. **Configure as variáveis de ambiente:**
-   - `VITE_API_URL` - URL do backend
-
-4. **Deploy automático:**
-```bash
-git push origin main
-```
-
-## 📱 Funcionalidades
-
-### 🔐 Autenticação
-- Login com email/senha
-- Login com Google OAuth
-- Registro de usuários
-- Persistência de sessão
-
-### 📊 Dashboard
-- Visão geral de projetos
-- Resumo financeiro
-- Próximas viagens
-- Metas em andamento
-
-### 📋 Projetos
-- Criar, editar e deletar projetos
-- Definir prioridades e status
-- Acompanhar progresso
-- Datas de início e fim
-
-### 🎯 Metas
-- Criar metas com sub-objetivos
-- Definir datas limite
-- Acompanhar progresso
-- Categorizar por prioridade
-
-### 💰 Finanças
-- Registrar receitas e despesas
-- Categorizar transações
-- Visualizar histórico
-- Planejamento financeiro mensal
-
-### ✈️ Viagens
-- Planejar viagens detalhadas
-- Calcular custos por categoria
-- Definir datas e destinos
-- Acompanhar gastos
-
-### 💼 Carreira
-- Planejar desenvolvimento profissional
-- Definir objetivos de carreira
-- Acompanhar certificações
-- Estabelecer metas
-
-### 📅 Calendário
-- Visualizar eventos
-- Sincronizar com Google Calendar
-- Criar lembretes
-- Organizar agenda
+- ✅ **Dashboard Analytics** - Relatórios visuais
+- ✅ **Gestão de Projetos** - Interface tipo Kanban
+- ✅ **Metas e Objetivos** - Acompanhamento de progresso
+- ✅ **Controle Financeiro** - Receitas e despesas
+- ✅ **Planejamento de Viagens** - Orçamentos e custos reais
+- ✅ **Calendário Integrado** - Eventos e compromissos
+- ✅ **Perfil Profissional** - Histórico de carreira
+- ✅ **Design Responsivo** - Mobile-first
+- ✅ **Tema Escuro/Claro** - Preferências do usuário
+- ✅ **PWA Ready** - Progressive Web App
 
 ## 🎨 Interface
 
-- **Design responsivo** - Funciona em desktop e mobile
-- **Tema escuro** - Interface moderna e elegante
-- **Componentes reutilizáveis** - Código limpo e organizado
-- **Animações suaves** - Experiência de usuário fluida
+### Características do Design
+- **Material Design** inspirado
+- **Cores vibrantes** e modernas
+- **Animações suaves** e micro-interações
+- **Tipografia clara** e legível
+- **Layout responsivo** para todos os dispositivos
 
-## 📁 Estrutura do Projeto
+### Páginas Principais
+- 📊 **Dashboard** - Visão geral com métricas
+- 📋 **Projetos** - Gestão completa de tasks
+- 🎯 **Metas** - Objetivos e progresso
+- 💰 **Finanças** - Controle de gastos
+- ✈️ **Viagens** - Planejamento e acompanhamento
+- 📅 **Calendário** - Eventos e agenda
+- 👨‍💼 **Carreira** - Perfil profissional
+- ⚙️ **Configurações** - Preferências
+
+## 🌐 Deploy
+
+- **Produção**: Vercel
+- **Desenvolvimento**: Vite dev server
+
+## 🔧 Desenvolvimento Local
+
+```bash
+# Instalar dependências
+npm install
+
+# Configurar ambiente (opcional)
+cp env.local.example .env.local
+# Edite .env.local com URL da API local
+
+# Executar em desenvolvimento
+npm run dev
+
+# Build para produção
+npm run build
+
+# Preview da build
+npm run preview
+```
+
+## 🌍 Variáveis de Ambiente
+
+```env
+# URL da API backend
+VITE_API_BASE_URL=https://backend-pro.vercel.app
+
+# Google OAuth (opcional)
+VITE_GOOGLE_CLIENT_ID=your_google_client_id
+
+# Debug
+VITE_DEBUG=false
+```
+
+## 📱 PWA Features
+
+- ✅ **Offline-first** - Funciona sem internet
+- ✅ **Installable** - Adicionar à tela inicial
+- ✅ **Fast loading** - Cache inteligente
+- ✅ **Background sync** - Sincronização automática
+
+## 🔗 API Integration
+
+Conecta automaticamente com o backend:
+- **Autenticação JWT** - Login seguro
+- **CRUD completo** - Todas as operações
+- **Tempo real** - WebSocket para updates
+- **Error handling** - Tratamento de erros elegante
+
+## 📊 Scripts Disponíveis
+
+```bash
+npm run dev          # Desenvolvimento local
+npm run build        # Build produção
+npm run preview      # Preview da build
+npm run lint         # Verificar código
+npm run lint:fix     # Corrigir código
+```
+
+## 🎯 Login de Teste
 
 ```
-src/
-├── components/          # Componentes React
-│   ├── Header.jsx      # Cabeçalho da aplicação
-│   ├── LoginScreen.jsx # Tela de login
-│   ├── Navigation.jsx  # Navegação
-│   ├── modals/         # Modais
-│   └── tabs/           # Abas do dashboard
-├── data/               # Dados iniciais
-├── hooks/              # Hooks customizados
-├── services/           # Serviços de API
-└── utils/              # Utilitários
+📧 Email: teste@planner.com
+🔒 Senha: 123456
 ```
-
-## 🔧 Scripts
-
-- `npm run dev` - Inicia o servidor de desenvolvimento
-- `npm run build` - Gera build de produção
-- `npm run preview` - Visualiza o build
-- `npm run lint` - Executa o linter
-
-## 🔗 Integração com Backend
-
-O frontend se conecta ao backend através da API REST:
-
-- **Autenticação:** JWT tokens
-- **CRUD Operations:** Para todos os recursos
-- **Real-time:** Atualizações em tempo real
-- **Error Handling:** Tratamento de erros robusto
-
-## 📱 Responsividade
-
-- **Desktop:** Layout completo com sidebar
-- **Tablet:** Layout adaptativo
-- **Mobile:** Layout otimizado para touch
-
-## 🎯 Performance
-
-- **Lazy Loading:** Carregamento sob demanda
-- **Code Splitting:** Divisão de código
-- **Optimized Images:** Imagens otimizadas
-- **Caching:** Cache inteligente
-
-## 📝 Licença
-
-MIT License
-
-## 👨‍💻 Autor
-
-Wellevelton
 
 ## 🔗 Links
 
-- **Frontend:** https://planner-p0cw8rgqx-sobreiras-projects.vercel.app
-- **Backend:** https://github.com/Wellevelton/backend-pro
-- **Documentação:** https://github.com/Wellevelton/frontend-pro-
+- **Backend**: [Planner Pro Backend](https://github.com/SobreiraProgramador/backend-pro)
+- **App Produção**: [https://frontend-pro-.vercel.app](https://frontend-pro-.vercel.app)
+- **API**: [https://backend-pro.vercel.app](https://backend-pro.vercel.app)
 
+---
+
+**Desenvolvido por SobreiraProgramador** 🚀

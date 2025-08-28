@@ -54,6 +54,8 @@ const allowedOrigins = [
   'https://frontend-i20hjzr5e-sobreiras-projects.vercel.app', // ✅ FRONTEND ATUAL
   'http://localhost:5173', // Desenvolvimento local
   'http://localhost:3000', // Desenvolvimento local alternativo
+  process.env.FRONTEND_URL, // 🚂 Railway Frontend URL
+  'https://*.up.railway.app', // 🚂 Railway apps
 ];
 
 app.use(cors({

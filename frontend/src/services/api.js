@@ -1,8 +1,8 @@
 // API Service for Planner Pro
 // Centralized API calls to backend
 
-// BACKEND URL - URL FIXA QUE NUNCA MUDA
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://backend-clean-steel.vercel.app';
+// BACKEND URL - ALIAS FIXO E LIMPO
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://planner-api-sobreira.vercel.app';
 const API_PREFIX = '/api';
 
 // Token management

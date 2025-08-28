@@ -1,75 +1,99 @@
-# Planner Pro Backend
+# 🏁 Planner Pro - Backend API
 
-Backend completo para o Planner Pro - aplicação de planejamento pessoal e profissional.
+Backend API REST para o sistema Planner Pro - Sistema completo de planejamento pessoal.
 
 ## 🚀 Tecnologias
 
-- **Node.js** - Runtime JavaScript
-- **Express.js** - Framework web
+- **Node.js** + **Express** - Framework web
 - **Prisma** - ORM para banco de dados
-- **PostgreSQL** - Banco de dados (opcional, funciona em modo mock)
+- **PostgreSQL** - Banco de dados (produção)
+- **SQLite** - Banco de dados (desenvolvimento local)
 - **JWT** - Autenticação
+- **Socket.io** - Tempo real
 - **bcryptjs** - Hash de senhas
-- **CORS** - Cross-origin resource sharing
 
 ## 📋 Funcionalidades
 
-- ✅ **Autenticação JWT**
-- ✅ **Login/Registro de usuários**
-- ✅ **Login com Google**
-- ✅ **Gestão de Metas**
-- ✅ **Gestão de Projetos**
-- ✅ **Gestão Financeira**
-- ✅ **Gestão de Viagens**
-- ✅ **Calendário de Eventos**
-- ✅ **Planejamento de Carreira**
-- ✅ **Modo Mock** (funciona sem banco de dados)
-
-## 🔧 Instalação
-
-```bash
-# Instalar dependências
-npm install
-
-# Configurar variáveis de ambiente
-cp env.example .env
-
-# Executar em desenvolvimento
-npm run dev
-
-# Executar em produção
-npm start
-```
+- ✅ **Autenticação**: Login/Registro + JWT
+- ✅ **Projetos**: CRUD completo com categorias
+- ✅ **Metas**: Sistema de objetivos e progresso  
+- ✅ **Finanças**: Controle de receitas e despesas
+- ✅ **Viagens**: Planejamento e controle de custos
+- ✅ **Calendário**: Eventos e compromissos
+- ✅ **Carreira**: Histórico profissional
+- ✅ **Planejamento Financeiro**: Metas financeiras
+- ✅ **Tempo Real**: Sincronização via WebSocket
 
 ## 🌐 Deploy
 
-O backend está configurado para deploy no Vercel como serverless functions.
+- **Produção**: Vercel + PostgreSQL (Supabase)
+- **Desenvolvimento**: Local + SQLite
 
-## 📡 Endpoints
+## 📊 Endpoints API
 
 ### Autenticação
 - `POST /api/auth/login` - Login
 - `POST /api/auth/register` - Registro
 - `POST /api/auth/google` - Login Google
 
-### Dados
-- `GET /api/goals` - Listar metas
-- `GET /api/projects` - Listar projetos
-- `GET /api/finances` - Listar finanças
-- `GET /api/travels` - Listar viagens
-- `GET /api/calendar` - Listar eventos
-- `GET /api/career` - Listar carreira
+### Recursos (todos autenticados)
+- `GET|POST|PUT|DELETE /api/goals` - Metas
+- `GET|POST|PUT|DELETE /api/projects` - Projetos  
+- `GET|POST|PUT|DELETE /api/finances` - Finanças
+- `GET|POST|PUT|DELETE /api/travels` - Viagens
+- `GET|POST|PUT|DELETE /api/calendar` - Calendário
+- `GET|POST|PUT|DELETE /api/career` - Carreira
+- `GET|POST|PUT|DELETE /api/financial-planning` - Planejamento
 
-### Health Check
-- `GET /api/health` - Status do servidor
+### Utilitários
+- `GET /api/health` - Status da API
+- `POST /api/import/travels` - Importar planilha viagens
+- `POST /api/import/finances` - Importar planilha financeira
 
-## 🔒 Autenticação
+## 🔧 Desenvolvimento Local
 
-Todas as rotas protegidas requerem o header:
+```bash
+# Instalar dependências
+npm install
+
+# Configurar ambiente
+cp env.example .env
+# Edite .env com suas configurações
+
+# Configurar banco SQLite
+npm run db:setup
+
+# Executar em desenvolvimento
+npm run dev
 ```
-Authorization: Bearer <JWT_TOKEN>
+
+## 🌍 Variáveis de Ambiente
+
+```env
+# Banco de dados
+DATABASE_URL="postgresql://..." # Produção
+DATABASE_URL="file:./dev.db"    # Local
+
+# JWT
+JWT_SECRET="your-secret-key"
+
+# Servidor
+PORT=3001
+NODE_ENV="production"
 ```
 
-## 🎯 Modo Mock
+## 📡 CORS
 
-O backend funciona em modo mock quando não há conexão com banco de dados, permitindo desenvolvimento e testes sem configuração de banco.
+Configurado para aceitar:
+- Frontend em produção (Vercel)
+- Desenvolvimento local (localhost:5173)
+
+## 🔗 Links
+
+- **Frontend**: [Planner Pro Frontend](https://github.com/SobreiraProgramador/frontend-pro-)
+- **API Produção**: [https://backend-pro.vercel.app](https://backend-pro.vercel.app)
+- **Health Check**: [https://backend-pro.vercel.app/api/health](https://backend-pro.vercel.app/api/health)
+
+---
+
+**Desenvolvido por SobreiraProgramador** 🚀

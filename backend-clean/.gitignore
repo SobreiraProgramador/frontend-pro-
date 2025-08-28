@@ -11,6 +11,11 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
+# Database
+*.db
+*.db-journal
+dev.db*
+
 # Logs
 logs
 *.log
@@ -21,47 +26,30 @@ pids
 *.seed
 *.pid.lock
 
-# Coverage directory used by tools like istanbul
+# Coverage directory
 coverage/
 
-# nyc test coverage
-.nyc_output
-
-# Dependency directories
-node_modules/
-jspm_packages/
-
-# Optional npm cache directory
-.npm
-
-# Optional REPL history
-.node_repl_history
-
-# Output of 'npm pack'
-*.tgz
-
-# Yarn Integrity file
-.yarn-integrity
-
-# dotenv environment variables file
-.env
-
-# Prisma
-prisma/migrations/
-prisma/dev.db
-prisma/dev.db-journal
-
-# IDE
+# IDE files
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# OS
+# OS files
 .DS_Store
 Thumbs.db
 
 # Vercel
-.vercel
+.vercel/
 
-.env*.local
+# Prisma
+prisma/migrations/
+
+# Local development files
+env.local.example
+start-*.bat
+run-*.bat
+setup-*.bat
+LOCAL_SETUP_GUIDE.md
+PROBLEMA_RESOLVIDO.md
+.vercel

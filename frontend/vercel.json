@@ -1,10 +1,10 @@
 {
   "version": 2,
+  "alias": ["planner-pro-sobreira.vercel.app"],
   "rewrites": [
     {
       "source": "/(.*)",
       "destination": "/index.html"
     }
-  ],
-  "alias": ["frontend-pro.vercel.app"]
+  ]
 }
