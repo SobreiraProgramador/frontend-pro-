@@ -5,10 +5,12 @@
   "main": "index.js",
   "scripts": {
     "dev": "vite",
+    "dev:local": "cp env.local.example .env.local && npm run dev",
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint . --ext js,jsx,ts,tsx",
-    "lint:fix": "eslint . --ext js,jsx,ts,tsx --fix"
+    "lint:fix": "eslint . --ext js,jsx,ts,tsx --fix",
+    "local:setup": "cp env.local.example .env.local && npm install"
   },
   "dependencies": {
     "@splinetool/react-spline": "^4.1.0",

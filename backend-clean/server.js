@@ -24,10 +24,16 @@ async function getPrisma() {
   return prisma;
 }
 
+// Configuração de porta
+const PORT = process.env.PORT || 3001;
+
 // Verificar se estamos em produção (Vercel)
 const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL === '1';
-console.log(`🌍 Ambiente: ${isProduction ? 'PRODUÇÃO' : 'DESENVOLVIMENTO'}`);
+const isLocal = process.env.NODE_ENV === 'development' && !process.env.VERCEL;
+console.log(`🌍 Ambiente: ${isProduction ? 'PRODUÇÃO' : isLocal ? 'LOCAL' : 'DESENVOLVIMENTO'}`);
 console.log(`🔗 DATABASE_URL: ${process.env.DATABASE_URL ? 'Configurado' : 'Não configurado'}`);
+console.log(`🏠 Modo Local: ${isLocal ? 'SIM' : 'NÃO'}`);
+console.log(`🚀 Porta: ${PORT}`);
 
 // Mock data storage (simula banco de dados)
 const mockData = {
@@ -39,7 +45,7 @@ const mockData = {
   financialPlanning: []
 };
 
-const PORT = process.env.PORT || 3001; // Vercel usa PORT padrão
+
 
 // ==================== CORS CORRETO ====================
 const allowedOrigins = [
@@ -745,7 +751,7 @@ app.post('/api/goals', authenticateToken, async (req, res) => {
         status: req.body.status || 'pending',
         priority: req.body.priority || 'medium',
         goals: req.body.goals ? req.body.goals.map(goal => JSON.stringify(goal)) : [], // Converter objetos para JSON strings
-        userId: req.user.userId
+          userId: req.user.userId
       };
       
       console.log('Dados para criação:', goalData);
@@ -1142,7 +1148,7 @@ app.post('/api/finances', authenticateToken, async (req, res) => {
         type: req.body.type || 'expense',
         category: req.body.category || null,
         date: req.body.date ? new Date(req.body.date) : new Date(),
-        userId: req.user.userId
+          userId: req.user.userId
       };
       
       console.log('Dados filtrados:', financeData);
@@ -1310,7 +1316,7 @@ app.post('/api/projects', authenticateToken, async (req, res) => {
         priority: req.body.priority || 'medium',
         tags: req.body.tags || [],
         goalId: req.body.goalId, // Incluir o goalId para relacionar com a meta
-        userId: req.user.userId
+          userId: req.user.userId
       };
       
       const project = await db.project.create({
@@ -1513,7 +1519,7 @@ app.post('/api/calendar', authenticateToken, async (req, res) => {
         endDate: req.body.endDate ? new Date(req.body.endDate) : null,
         location: req.body.location,
         type: req.body.type || 'event',
-        userId: req.user.userId
+          userId: req.user.userId
       };
       
       const event = await db.calendarEvent.create({

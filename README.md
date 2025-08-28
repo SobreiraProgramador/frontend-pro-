@@ -19,25 +19,58 @@ copia-para-testes/
 
 ## 🛠️ Setup Local
 
-### 1. Frontend
+### 🚀 Execução Rápida (Recomendado)
 
+#### Windows:
+```bash
+# 1. Setup inicial (execute apenas uma vez)
+.\setup-local.bat
+
+# 2. Executar projeto (abre 2 janelas automaticamente)
+.\run-project.bat
+
+# OU executar separadamente:
+.\start-backend.bat   # Em uma janela
+.\start-frontend.bat  # Em outra janela
+```
+
+#### Linux/Mac:
+```bash
+# 1. Setup inicial (execute apenas uma vez)
+chmod +x *.sh
+./setup-local.sh
+
+# 2. Executar projeto
+./run-local.sh
+```
+
+### 🔧 Execução Manual
+
+#### 1. Backend
+```bash
+cd backend-clean
+cp env.local.example .env  # Configurar variáveis de ambiente
+npm install                # Instalar dependências
+npm run db:setup          # Configurar banco SQLite
+npm run dev               # Executar (porta 3001)
+```
+
+#### 2. Frontend  
 ```bash
 cd frontend
-npm install
-npm run dev
+cp env.local.example .env.local  # Configurar variáveis de ambiente
+npm install                      # Instalar dependências
+npm run dev                     # Executar (porta 5173)
 ```
 
-O frontend estará disponível em: `http://localhost:5173`
+### 🌐 URLs Locais
+- **Frontend**: http://localhost:5173
+- **Backend**: http://localhost:3001
+- **Health Check**: http://localhost:3001/api/health
 
-### 2. Backend
-
-```bash
-cd backend
-npm install
-npm run dev
-```
-
-O backend estará disponível em: `http://localhost:3000`
+### 👤 Login de Teste
+- **Email**: teste@planner.com  
+- **Senha**: 123456
 
 ## 🌐 Deploy
 

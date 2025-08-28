@@ -1,3 +1,7 @@
+
+
+
+
 # Dependencies
 node_modules/
 npm-debug.log*
@@ -16,6 +20,20 @@ out/
 .env.development.local
 .env.test.local
 .env.production.local
+
+# Local development files (keep these for local testing)
+backend-clean/dev.db
+backend-clean/dev.db-journal
+**/env.local.example
+start-*.bat
+run-*.bat
+run-*.sh
+setup-*.bat
+setup-*.sh
+LOCAL_SETUP_GUIDE.md
+PROBLEMA_RESOLVIDO.md
+ADAPTACAO_COMPLETA.md
+BACKUP_PRODUCTION_CONFIGS.md
 
 # IDE and editor files
 .vscode/

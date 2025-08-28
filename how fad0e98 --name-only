@@ -1,0 +1,10 @@
+[33mfad0e98[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m Beta v1.0 - Sistema completo com perfil do usuário integrado ao banco de dados
+[33md49304c[m Fix: Update backend URLs in LoginScreen for Google OAuth and regular login
+[33m7f17a7f[m Update: Backend URL to latest deployment with Google OAuth
+[33m3ff8404[m Update: Google OAuth credentials with real Client ID and API Key
+[33mff6b11b[m Add: Google OAuth integration and Calendar API - Login with Google and Calendar sync
+[33m1f646ea[m Fix: Support both CSV formats - Mês with accent and ano/Mes separated
+[33m151d232[m Update: Backend URL to latest deployment
+[33m76d2371[m Fix: Add new frontend URL to CORS and improve CSV import debugging
+[33m875e9a8[m Update: Backend URL to new Vercel deployment
+[33meb84243[m Fix: CORS for new frontend URL and CSV import parsing for financial data
