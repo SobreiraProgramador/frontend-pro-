@@ -10,20 +10,11 @@ class RealtimeSyncService {
     this.reconnectDelay = 1000;
   }
 
-  // Connect to WebSocket server (disabled for Vercel compatibility)
+  // Connect to WebSocket server (Railway compatible)
   connect() {
-    console.log('⚠️ WebSocket desabilitado para compatibilidade com Vercel');
-    this.isConnected = false;
-    // Simulate connection for compatibility
-    setTimeout(() => {
-      this.notifyListeners({ type: 'connected' });
-    }, 100);
-    return;
-    
-    /* WebSocket code disabled for Vercel
     try {
       const wsUrl = import.meta.env.PROD 
-        ? 'wss://backend-clean-steel.vercel.app'
+        ? 'wss://backend-api-production-fd17.up.railway.app'
         : 'ws://localhost:3001';
       
       console.log('🔗 Conectando ao WebSocket...', wsUrl);
@@ -61,7 +52,6 @@ class RealtimeSyncService {
     } catch (error) {
       console.error('❌ Erro ao conectar WebSocket:', error);
     }
-    */ // End of disabled WebSocket code
   }
 
   // Attempt to reconnect

@@ -2,7 +2,7 @@
 // Centralized API calls to backend
 
 // BACKEND URL - ALIAS FIXO E LIMPO
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://planner-api-sobreira.vercel.app';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://backend-api-production-fd17.up.railway.app';
 const API_PREFIX = '/api';
 
 // Token management

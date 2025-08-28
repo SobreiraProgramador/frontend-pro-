@@ -24,8 +24,8 @@ async function getPrisma() {
   return prisma;
 }
 
-// Configuração de porta
-const PORT = process.env.PORT || 3001;
+// Configuração de porta (Railway precisa escutar na porta dinâmica)
+const PORT = process.env.PORT || 3000;
 
 // Verificar se estamos em produção (Vercel)
 const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL === '1';
@@ -2119,14 +2119,14 @@ app.use('*', (req, res) => {
 });
 
 // ==================== INICIAR SERVIDOR ====================
-if (process.env.NODE_ENV !== 'production') {
-  server.listen(PORT, () => {
-    console.log(`🚀 Backend limpo rodando na porta ${PORT}`);
-    console.log(`📡 Health check: http://localhost:${PORT}/api/health`);
-    console.log(`🔗 WebSocket ativo para sync em tempo real`);
-    console.log(`🔒 CORS configurado para aceitar frontend Vercel`);
-  });
-}
+// Railway precisa escutar em 0.0.0.0, não localhost
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 Backend limpo rodando na porta ${PORT}`);
+  console.log(`📡 Health check: http://0.0.0.0:${PORT}/api/health`);
+  console.log(`🔗 WebSocket ativo para sync em tempo real`);
+  console.log(`🔒 CORS configurado para Railway e Vercel`);
+  console.log(`🌍 Railway Environment: ${process.env.RAILWAY_ENVIRONMENT || 'local'}`);
+});
 
 // Exportar para Vercel
 module.exports = app;
