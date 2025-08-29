@@ -11,7 +11,7 @@ const ApiTest = () => {
 
     try {
       // Teste de health check
-      const healthResponse = await fetch('https://backend-clean-steel.vercel.app/api/health');
+      const healthResponse = await fetch('https://backend-api-production-fd17.up.railway.app/api/health');
       results.health = healthResponse.ok ? '✅ OK' : '❌ Erro';
 
       // Teste de login

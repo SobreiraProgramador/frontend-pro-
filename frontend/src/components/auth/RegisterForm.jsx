@@ -65,7 +65,7 @@ const RegisterForm = ({ onSwitchToLogin }) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('https://backend-clean-steel.vercel.app/api/auth/register', {
+      const response = await fetch('https://backend-api-production-fd17.up.railway.app/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -49,9 +49,11 @@ const mockData = {
 
 // ==================== CORS CORRETO ====================
 const allowedOrigins = [
-  'https://frontend-pro-nu.vercel.app', // ✅ ALIAS FIXO DO FRONTEND
+  'https://planner-pro-sobreira.vercel.app', // ✅ ALIAS FIXO DO FRONTEND (PRINCIPAL)
+  'https://frontend-pro-nu.vercel.app', // ✅ ALIAS FIXO ANTIGO
   'https://frontend-pro-sobreiras-projects.vercel.app', // ✅ URL FIXA ALTERNATIVA
   'https://frontend-i20hjzr5e-sobreiras-projects.vercel.app', // ✅ FRONTEND ATUAL
+  'https://frontend-cvy1734uk-sobreiras-projects-4a15b649.vercel.app', // ✅ NOVO FRONTEND VERCEL
   'http://localhost:5173', // Desenvolvimento local
   'http://localhost:3000', // Desenvolvimento local alternativo
   process.env.FRONTEND_URL, // 🚂 Railway Frontend URL
