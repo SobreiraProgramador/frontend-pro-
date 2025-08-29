@@ -25,15 +25,26 @@ export const DataProvider = ({ children }) => {
   const refreshAllData = useCallback(async () => {
     try {
       setIsLoading(true);
-      console.log('🔄 Atualizando dados via Context...');
+      console.log('🔄 [CONTEXT DEBUG] Iniciando atualização de dados...');
       
+      // Verificar se há token antes de fazer chamadas
+      const token = localStorage.getItem('token');
+      console.log('🔑 [CONTEXT DEBUG] Token presente:', !!token);
+      
+      if (!token) {
+        console.log('❌ [CONTEXT DEBUG] NENHUM TOKEN - Pulando chamadas de API');
+        setIsLoading(false);
+        return;
+      }
+      
+      console.log('📡 [CONTEXT DEBUG] Fazendo 6 chamadas simultâneas...');
       const [projectsData, goalsData, financesData, travelsData, calendarData, careerData] = await Promise.all([
-        apiService.projects.getAll().catch(() => []),
-        apiService.goals.getAll().catch(() => []),
-        apiService.finances.getAll().catch(() => []),
-        apiService.travels.getAll().catch(() => []),
-        apiService.calendar.getAll().catch(() => []),
-        apiService.career.getAll().catch(() => [])
+        apiService.projects.getAll().catch((err) => { console.log('❌ [CONTEXT] projects.getAll falhou:', err.message); return []; }),
+        apiService.goals.getAll().catch((err) => { console.log('❌ [CONTEXT] goals.getAll falhou:', err.message); return []; }),
+        apiService.finances.getAll().catch((err) => { console.log('❌ [CONTEXT] finances.getAll falhou:', err.message); return []; }),
+        apiService.travels.getAll().catch((err) => { console.log('❌ [CONTEXT] travels.getAll falhou:', err.message); return []; }),
+        apiService.calendar.getAll().catch((err) => { console.log('❌ [CONTEXT] calendar.getAll falhou:', err.message); return []; }),
+        apiService.career.getAll().catch((err) => { console.log('❌ [CONTEXT] career.getAll falhou:', err.message); return []; })
       ]);
 
       // Atualizar estados

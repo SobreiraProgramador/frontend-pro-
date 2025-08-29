@@ -22,6 +22,11 @@ const setToken = (token) => {
 const authenticatedRequest = async (url, options = {}) => {
   const token = getToken();
   
+  console.log('🔍 [AUTH DEBUG] Iniciando request autenticado');
+  console.log('🔗 [AUTH DEBUG] URL:', `${API_BASE_URL}${API_PREFIX}${url}`);
+  console.log('🔑 [AUTH DEBUG] Token no localStorage:', !!token);
+  console.log('📝 [AUTH DEBUG] Token value:', token ? token.substring(0, 30) + '...' : 'NENHUM');
+  
   const config = {
     ...options,
     credentials: 'include',
@@ -33,20 +38,31 @@ const authenticatedRequest = async (url, options = {}) => {
 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
-    console.log('🔑 Token enviado:', token.substring(0, 20) + '...');
+    console.log('✅ [AUTH DEBUG] Header Authorization adicionado');
+    console.log('🔑 [AUTH DEBUG] Token enviado:', token.substring(0, 20) + '...');
   } else {
-    console.log('❌ Nenhum token encontrado');
+    console.log('❌ [AUTH DEBUG] NENHUM TOKEN ENCONTRADO - Request será 401');
+    console.log('🗄️ [AUTH DEBUG] localStorage keys:', Object.keys(localStorage));
   }
 
+  console.log('📋 [AUTH DEBUG] Headers finais:', config.headers);
   const response = await fetch(`${API_BASE_URL}${API_PREFIX}${url}`, config);
+  
+  console.log('🔄 [AUTH DEBUG] Response status:', response.status);
+  console.log('📡 [AUTH DEBUG] Response headers:', Object.fromEntries(response.headers.entries()));
   
   // Tenta ler JSON; se não for JSON, mantém vazio
   let payload = {};
   try { 
     payload = await response.json(); 
-  } catch {}
+    console.log('📄 [AUTH DEBUG] Response payload:', payload);
+  } catch (error) {
+    console.log('⚠️ [AUTH DEBUG] Erro ao ler JSON:', error.message);
+  }
 
   if (response.status === 401 || response.status === 403) {
+    console.log('🚨 [AUTH DEBUG] 401/403 DETECTADO - Removendo token');
+    console.log('🚨 [AUTH DEBUG] Payload do erro:', payload);
     // token ausente/ruim → força logout/novo login
     localStorage.removeItem('token');
     localStorage.removeItem('isLoggedIn');
@@ -54,9 +70,11 @@ const authenticatedRequest = async (url, options = {}) => {
   }
   
   if (!response.ok) {
+    console.log('❌ [AUTH DEBUG] Response não OK:', response.status, response.statusText);
     throw new Error(payload?.error || response.statusText);
   }
   
+  console.log('✅ [AUTH DEBUG] Request successful');
   return payload;
 };
 
@@ -68,6 +86,10 @@ export const apiService = {
   // Auth API
   auth: {
     login: async (credentials) => {
+      console.log('🔐 [LOGIN DEBUG] Iniciando login');
+      console.log('🔗 [LOGIN DEBUG] URL:', `${API_BASE_URL}/api/auth/login`);
+      console.log('📝 [LOGIN DEBUG] Credentials:', { email: credentials.email, password: '***' });
+      
       const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: 'POST',
         headers: {
@@ -77,12 +99,19 @@ export const apiService = {
         body: JSON.stringify(credentials),
       });
 
+      console.log('🔄 [LOGIN DEBUG] Response status:', response.status);
+      
       if (!response.ok) {
         const error = await response.json();
+        console.log('❌ [LOGIN DEBUG] Login falhou:', error);
         throw new Error(error.error || 'Erro no login');
       }
 
-      return response.json();
+      const loginData = await response.json();
+      console.log('✅ [LOGIN DEBUG] Login successful:', loginData);
+      console.log('🔑 [LOGIN DEBUG] Token recebido:', loginData.token ? loginData.token.substring(0, 30) + '...' : 'NENHUM');
+      
+      return loginData;
     },
 
     register: async (userData) => {

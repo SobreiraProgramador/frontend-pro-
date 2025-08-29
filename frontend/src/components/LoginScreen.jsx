@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { googleAuth, GOOGLE_CONFIG } from '../config/google';
+import { apiService } from '../services/api';
 
 const LoginScreen = ({ onLogin, onSwitchToRegister }) => {
   const [formData, setFormData] = useState({
@@ -86,16 +87,28 @@ const LoginScreen = ({ onLogin, onSwitchToRegister }) => {
   };
 
   // Função temporária para login rápido (para testar)
-  const handleQuickLogin = () => {
+  const handleQuickLogin = async () => {
     console.log('=== QUICK LOGIN FOR TESTING ===');
-    const mockUser = {
-      id: 1,
-      name: 'Usuário Teste',
-      email: 'teste@teste.com'
-    };
-    localStorage.setItem('token', 'mock-token-for-testing');
-    localStorage.setItem('user', JSON.stringify(mockUser));
-    onLogin(mockUser);
+    try {
+      // Fazer login real com as credenciais de teste
+      const loginData = await apiService.auth.login({
+        email: 'teste@planner.com',
+        password: '123456'
+      });
+      console.log('✅ [QUICK LOGIN] Login real successful:', loginData);
+      onLogin(loginData);
+    } catch (error) {
+      console.error('❌ [QUICK LOGIN] Erro no login real:', error);
+      // Fallback para mock apenas se falhar
+      const mockUser = {
+        id: 1,
+        name: 'Usuário Teste',
+        email: 'teste@teste.com',
+        token: 'mock-token-for-testing'
+      };
+      console.log('⚠️ [QUICK LOGIN] Usando fallback mock');
+      onLogin(mockUser);
+    }
   };
 
   const handleGoogleLogin = async () => {

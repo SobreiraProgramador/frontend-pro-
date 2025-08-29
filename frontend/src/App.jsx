@@ -118,14 +118,20 @@ const App = () => {
 
   // Função para lidar com login
   const handleLogin = async (loginData) => {
-    console.log('Login realizado:', loginData);
+    console.log('🔐 [APP DEBUG] Login realizado:', loginData);
+    console.log('🔑 [APP DEBUG] Token no loginData:', loginData.token ? loginData.token.substring(0, 30) + '...' : 'NENHUM');
+    
     setIsLoggedIn(true);
     localStorage.setItem('isLoggedIn', 'true');
     localStorage.setItem('userEmail', loginData.user?.email || loginData.email || '');
     
     // Salvar token se fornecido
     if (loginData.token) {
+      console.log('✅ [APP DEBUG] Salvando token via apiService.setToken');
       apiService.setToken(loginData.token);
+      console.log('🔍 [APP DEBUG] Token salvo, verificando localStorage:', localStorage.getItem('token') ? 'PRESENTE' : 'AUSENTE');
+    } else {
+      console.log('❌ [APP DEBUG] NENHUM TOKEN no loginData - problema no login');
     }
 
     // Buscar perfil do usuário do banco de dados
@@ -493,7 +499,17 @@ const App = () => {
   const refreshAllData = async (force = false) => {
     try {
       setIsRefreshing(true);
-      console.log('🔄 Atualizando todos os dados...');
+      console.log('🔄 [APP DEBUG] Iniciando atualização de dados...');
+      
+      // Verificar se há token antes de fazer chamadas
+      const token = localStorage.getItem('token');
+      console.log('🔑 [APP DEBUG] Token presente:', !!token);
+      
+      if (!token) {
+        console.log('❌ [APP DEBUG] NENHUM TOKEN - Pulando chamadas de API');
+        setIsRefreshing(false);
+        return;
+      }
       
       const now = Date.now();
       const cacheExpiry = 5 * 60 * 1000; // 5 minutos
