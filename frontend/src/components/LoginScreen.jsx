@@ -56,7 +56,7 @@ const LoginScreen = ({ onLogin, onSwitchToRegister }) => {
       console.log('Form data:', formData);
       console.log('Making fetch request to Vercel backend...');
       
-      const response = await fetch('https://backend-api-production-fd17.up.railway.app/api/auth/login', {
+      const response = await fetch('https://backend-pro-production-d56a.up.railway.app/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -127,7 +127,7 @@ const LoginScreen = ({ onLogin, onSwitchToRegister }) => {
       localStorage.setItem('google_access_token', googleUser.accessToken);
       
       // Enviar dados para o backend para autenticar
-              const response = await fetch('https://backend-api-production-fd17.up.railway.app/api/auth/google', {
+              const response = await fetch('https://backend-pro-production-d56a.up.railway.app/api/auth/google', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

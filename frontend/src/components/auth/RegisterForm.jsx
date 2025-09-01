@@ -1,3 +1,6 @@
+
+
+
 import React, { useState } from 'react';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 
@@ -65,7 +68,7 @@ const RegisterForm = ({ onSwitchToLogin }) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('https://backend-api-production-fd17.up.railway.app/api/auth/register', {
+      const response = await fetch('https://backend-pro-production-d56a.up.railway.app/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

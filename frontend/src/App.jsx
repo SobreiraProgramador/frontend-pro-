@@ -1,16 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { 
-  initialProjects, 
-  initialFinances, 
-  initialBudget, 
-  initialGoals, 
-  initialTravels, 
-  initialCareerPlanning, 
-  initialCalendarEvents,
-  planilhaFinanceira
-} from './data/initialData';
-import { viagensData } from './data/travelsData';
+// Dados mock removidos - tudo vem do backend agora
 import { ThemeProvider } from './contexts/ThemeContext';
 import { notificationService } from './services/notifications';
 import apiService from './services/api';
@@ -78,10 +68,10 @@ const App = () => {
   // Estados com dados do backend
   const [projects, setProjects] = useState([]);
   const [finances, setFinances] = useState([]);
-  const [budget, setBudget] = useState(initialBudget);
+  const [budget, setBudget] = useState({});
   const [goals, setGoals] = useState([]);
   const [travels, setTravels] = useState([]);
-  const [careerPlanning, setCareerPlanning] = useState(initialCareerPlanning);
+  const [careerPlanning, setCareerPlanning] = useState({});
   const [calendarEvents, setCalendarEvents] = useState([]);
   const [viagensDataState, setViagensDataState] = useState([]);
   const [planilhaFinanceiraState, setPlanilhaFinanceiraState] = useState([]);
@@ -90,13 +80,14 @@ const App = () => {
   const resetToInitialData = async () => {
     try {
       // Recarregar dados do backend
-      const [projectsData, goalsData, financesData, travelsData, calendarData, careerData] = await Promise.all([
+      const [projectsData, goalsData, financesData, travelsData, calendarData, careerData, budgetData] = await Promise.all([
         apiService.projects.getAll().catch(() => []),
         apiService.goals.getAll().catch(() => []),
         apiService.finances.getAll().catch(() => []),
         apiService.travels.getAll().catch(() => []),
         apiService.calendar.getAll().catch(() => []),
-        apiService.career.getAll().catch(() => [])
+        apiService.career.getAll().catch(() => []),
+        apiService.budget.get().catch(() => ({}))
       ]);
 
       // Atualizar estados
@@ -109,6 +100,7 @@ const App = () => {
       }
       if (calendarData) setCalendarEvents(calendarData);
       if (careerData) setPlanilhaFinanceiraState(careerData);
+      if (budgetData) setBudget(budgetData);
 
       console.log('Dados recarregados do backend!');
     } catch (error) {
@@ -165,25 +157,38 @@ const App = () => {
     const savedLogin = localStorage.getItem('isLoggedIn');
     const savedToken = localStorage.getItem('token');
     
+    console.log('🔄 [PERSISTENCE DEBUG] Verificando login salvo...');
+    console.log('🔑 [PERSISTENCE DEBUG] savedLogin:', savedLogin);
+    console.log('🔑 [PERSISTENCE DEBUG] savedToken:', savedToken ? 'PRESENTE' : 'AUSENTE');
+    
     if (savedLogin === 'true' && savedToken) {
+      console.log('✅ [PERSISTENCE DEBUG] Login encontrado, restaurando sessão...');
       setIsLoggedIn(true);
       apiService.setToken(savedToken); // Restaurar token
       
       // Buscar perfil do usuário do banco de dados
       const loadUserProfile = async () => {
         try {
+          console.log('🔄 [PERSISTENCE DEBUG] Carregando perfil do usuário...');
           const profileResponse = await apiService.user.getProfile();
           if (profileResponse.data) {
             setUserName(profileResponse.data.name || 'Usuário');
             setUserEmail(profileResponse.data.email || '');
-            console.log('✅ Perfil carregado do banco de dados');
+            console.log('✅ [PERSISTENCE DEBUG] Perfil carregado do banco de dados');
           }
         } catch (error) {
-          console.error('❌ Erro ao carregar perfil:', error);
+          console.error('❌ [PERSISTENCE DEBUG] Erro ao carregar perfil:', error);
+          // Se der erro 401, limpar login inválido
+          if (error.message.includes('Não autorizado') || error.message.includes('401')) {
+            console.log('🚨 [PERSISTENCE DEBUG] Token inválido, limpando login...');
+            handleLogout();
+          }
         }
       };
       
       loadUserProfile();
+    } else {
+      console.log('❌ [PERSISTENCE DEBUG] Nenhum login salvo encontrado');
     }
   }, []);
 
@@ -193,13 +198,14 @@ const App = () => {
       const loadDataFromBackend = async () => {
         try {
           // Carregar todos os dados do backend
-          const [projectsData, goalsData, financesData, travelsData, calendarData, careerData] = await Promise.all([
+          const [projectsData, goalsData, financesData, travelsData, calendarData, careerData, budgetData] = await Promise.all([
             apiService.projects.getAll().catch(() => []),
             apiService.goals.getAll().catch(() => []),
             apiService.finances.getAll().catch(() => []),
             apiService.travels.getAll().catch(() => []),
             apiService.calendar.getAll().catch(() => []),
-            apiService.career.getAll().catch(() => [])
+            apiService.career.getAll().catch(() => []),
+            apiService.budget.get().catch(() => ({}))
           ]);
 
           // Atualizar estados com dados do backend
@@ -212,6 +218,7 @@ const App = () => {
           }
           if (calendarData) setCalendarEvents(calendarData);
           if (careerData) setPlanilhaFinanceiraState(careerData);
+          if (budgetData) setBudget(budgetData);
 
           console.log('Dados carregados do backend com sucesso!');
         } catch (error) {

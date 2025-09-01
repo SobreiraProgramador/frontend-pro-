@@ -1714,6 +1714,172 @@ app.delete('/api/financial-planning/:id', authenticateToken, async (req, res) =>
   }
 });
 
+// Budget API
+app.get('/api/budget', authenticateToken, async (req, res) => {
+  try {
+    console.log('=== GET /api/budget ===');
+    console.log('User ID:', req.user.userId);
+    
+    const db = await getPrisma();
+    if (db) {
+      console.log('🔍 Buscando orçamento para usuário:', req.user.userId);
+      
+      const budget = await db.budget.findFirst({
+        where: { userId: req.user.userId }
+      });
+      
+      if (budget) {
+        console.log('📊 Orçamento encontrado:', budget);
+        res.json(budget);
+      } else {
+        console.log('📊 Nenhum orçamento encontrado, retornando estrutura vazia');
+        // Retornar estrutura vazia para o frontend criar
+        res.json({
+          monthly: {
+            planned: 0,
+            actual: 0,
+            target: 0,
+            categories: {}
+          }
+        });
+      }
+    } else {
+      console.log('❌ Banco não disponível, retornando mock data');
+      // Mock data
+      res.json({
+        monthly: {
+          planned: 9500,
+          actual: 9250,
+          target: 10000,
+          categories: {
+            'Educação': { planned: 500, actual: 299.90, target: 600 },
+            'Viagem': { planned: 2000, actual: 450.00, target: 2500 },
+            'Moradia': { planned: 1200, actual: 1200.00, target: 1200 },
+            'Alimentação': { planned: 800, actual: 350.00, target: 700 },
+            'Transporte': { planned: 400, actual: 280.00, target: 350 },
+            'Lazer': { planned: 300, actual: 150.00, target: 400 },
+            'Emergência': { planned: 500, actual: 0.00, target: 500 }
+          }
+        }
+      });
+    }
+  } catch (error) {
+    console.error('❌ Get budget error:', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+});
+
+app.post('/api/budget', authenticateToken, async (req, res) => {
+  try {
+    console.log('=== POST /api/budget ===');
+    console.log('Body:', req.body);
+    console.log('User ID:', req.user.userId);
+    
+    const db = await getPrisma();
+    if (db) {
+      const budget = await db.budget.create({
+        data: {
+          ...req.body,
+          userId: req.user.userId
+        }
+      });
+      
+      console.log('✅ Orçamento criado com sucesso');
+      res.json({ data: budget });
+    } else {
+      // Mock mode
+      const budget = {
+        id: Date.now(),
+        ...req.body,
+        userId: req.user.userId,
+        createdAt: new Date().toISOString()
+      };
+      res.json({ data: budget });
+    }
+  } catch (error) {
+    console.error('❌ Create budget error:', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+});
+
+app.put('/api/budget/:id', authenticateToken, async (req, res) => {
+  try {
+    console.log('=== PUT /api/budget/:id ===');
+    console.log('Budget ID:', req.params.id);
+    console.log('Body:', req.body);
+    console.log('User ID:', req.user.userId);
+    
+    const db = await getPrisma();
+    if (db) {
+      // Verificar se o orçamento pertence ao usuário
+      const existingBudget = await db.budget.findFirst({
+        where: { 
+          id: req.params.id,
+          userId: req.user.userId 
+        }
+      });
+      
+      if (!existingBudget) {
+        return res.status(404).json({ error: 'Orçamento não encontrado' });
+      }
+      
+      // Atualizar o orçamento
+      const updatedBudget = await db.budget.update({
+        where: { id: req.params.id },
+        data: req.body
+      });
+      
+      console.log('✅ Orçamento atualizado com sucesso');
+      res.json({ data: updatedBudget });
+    } else {
+      // Mock mode
+      console.log('✅ Orçamento atualizado (mock)');
+      res.json({ data: { id: req.params.id, ...req.body } });
+    }
+  } catch (error) {
+    console.error('❌ Update budget error:', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+});
+
+app.delete('/api/budget/:id', authenticateToken, async (req, res) => {
+  try {
+    console.log('=== DELETE /api/budget/:id ===');
+    console.log('Budget ID:', req.params.id);
+    console.log('User ID:', req.user.userId);
+    
+    const db = await getPrisma();
+    if (db) {
+      // Verificar se o orçamento pertence ao usuário
+      const budget = await db.budget.findFirst({
+        where: { 
+          id: req.params.id,
+          userId: req.user.userId 
+        }
+      });
+      
+      if (!budget) {
+        return res.status(404).json({ error: 'Orçamento não encontrado' });
+      }
+      
+      // Deletar o orçamento
+      await db.budget.delete({
+        where: { id: req.params.id }
+      });
+      
+      console.log('✅ Orçamento deletado com sucesso');
+      res.json({ success: true, message: 'Orçamento deletado com sucesso' });
+    } else {
+      // Mock mode
+      console.log('✅ Orçamento deletado (mock)');
+      res.json({ success: true, message: 'Orçamento deletado com sucesso' });
+    }
+  } catch (error) {
+    console.error('❌ Delete budget error:', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+});
+
 // Career - Create
 app.post('/api/career', authenticateToken, async (req, res) => {
   try {

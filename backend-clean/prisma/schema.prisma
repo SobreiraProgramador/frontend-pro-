@@ -23,6 +23,7 @@ model User {
   projects          Project[]
   goals             Goal[]
   finances          Finance[]
+  budgets           Budget[]
   financialPlanning FinancialPlanning[]
   travels           Travel[]
   careerItems       CareerItem[]
@@ -104,6 +105,22 @@ model Finance {
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   
   @@map("finances")
+}
+
+model Budget {
+  id          String   @id @default(cuid())
+  
+  // Dados mensais
+  monthly     Json     // Estrutura: { planned: number, actual: number, target: number, categories: {...} }
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("budgets")
 }
 
 model FinancialPlanning {

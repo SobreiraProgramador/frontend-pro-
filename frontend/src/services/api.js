@@ -1,8 +1,8 @@
 // API Service for Planner Pro
 // Centralized API calls to backend
 
-// BACKEND URL - ALIAS FIXO E LIMPO
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://backend-api-production-fd17.up.railway.app';
+// BACKEND URL - NOVO BACKEND RAILWAY
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://backend-pro-production-d56a.up.railway.app';
 const API_PREFIX = '/api';
 
 // Token management
@@ -368,6 +368,65 @@ export const apiService = {
 
       if (!response.ok) {
         throw new Error('Erro ao deletar financeiro');
+      }
+
+      return true;
+    },
+  },
+
+  // Budget API
+  budget: {
+    get: async () => {
+      return authenticatedRequest('/budget');
+    },
+
+    create: async (budget) => {
+      const response = await fetch(`${API_BASE_URL}${API_PREFIX}/budget`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${getToken()}`,
+        },
+        credentials: 'include',
+        body: JSON.stringify(budget),
+      });
+
+      if (!response.ok) {
+        throw new Error('Erro ao criar orçamento');
+      }
+
+      return response.json();
+    },
+
+    update: async (id, budget) => {
+      const response = await fetch(`${API_BASE_URL}${API_PREFIX}/budget/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${getToken()}`,
+        },
+        credentials: 'include',
+        body: JSON.stringify(budget),
+      });
+
+      if (!response.ok) {
+        throw new Error('Erro ao atualizar orçamento');
+      }
+
+      return response.json();
+    },
+
+    delete: async (id) => {
+      const response = await fetch(`${API_BASE_URL}${API_PREFIX}/budget/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${getToken()}`,
+        },
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        throw new Error('Erro ao deletar orçamento');
       }
 
       return true;

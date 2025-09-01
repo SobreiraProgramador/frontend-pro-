@@ -585,9 +585,19 @@ const SettingsTab = ({ setViagensDataState, setFinances, setPlanilhaFinanceiraSt
             setImportMessage('Salvando dados financeiros no banco de dados...');
             const result = await api.import.finances(financeData);
             console.log('✅ Dados financeiros importados no backend:', result);
+            
+            // Atualizar o estado global para refletir no frontend
             setPlanilhaFinanceiraState(financeData);
-            setImportMessage(`${result.message}`);
+            
+            // Mostrar mensagem de sucesso com contagem correta
+            const recordCount = result.data ? result.data.length : financeData.length;
+            setImportMessage(`${recordCount} registros financeiros importados com sucesso!`);
             setImportSuccess(true);
+            
+            // Recarregar dados do backend para garantir sincronização
+            setTimeout(() => {
+              window.location.reload(); // Recarregar para sincronizar todos os componentes
+            }, 2000);
           } catch (error) {
             console.error('❌ Erro ao importar dados financeiros no backend:', error);
             setImportMessage('Erro ao salvar no backend: ' + error.message);

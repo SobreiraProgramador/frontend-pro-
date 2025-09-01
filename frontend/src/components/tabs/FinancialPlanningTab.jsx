@@ -4,6 +4,7 @@ import api from '../../services/api';
 
 const FinancialPlanningTab = ({ planilhaFinanceiraState, setPlanilhaFinanceiraState }) => {
   const [showImportModal, setShowImportModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [editingRow, setEditingRow] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -43,12 +44,13 @@ const FinancialPlanningTab = ({ planilhaFinanceiraState, setPlanilhaFinanceiraSt
       const finalData = calculateSaldoAcum(updatedData);
       setPlanilhaFinanceiraState(finalData);
     }
-  }, []);
+  }, [planilhaFinanceiraState]);
 
   // Carregar dados do backend ao montar o componente
   useEffect(() => {
     const loadDataFromBackend = async () => {
       try {
+        setIsLoading(true);
         console.log('🔄 Iniciando carregamento de dados do backend...');
         const startTime = Date.now();
         
@@ -61,13 +63,23 @@ const FinancialPlanningTab = ({ planilhaFinanceiraState, setPlanilhaFinanceiraSt
         // O endpoint retorna diretamente o array, não response.data
         if (response && Array.isArray(response)) {
           console.log(`✅ ${response.length} registros carregados do backend`);
-          setPlanilhaFinanceiraState(response);
+          
+          // Processar dados antes de definir no estado
+          const processedData = response.map(row => calculateValues(row));
+          const finalData = calculateSaldoAcum(processedData);
+          
+          setPlanilhaFinanceiraState(finalData);
+          console.log('📊 Dados processados e definidos no estado:', finalData.length, 'registros');
         } else {
           console.log('❌ Resposta inválida do backend:', response);
+          console.log('📋 Tipo da resposta:', typeof response);
+          console.log('📋 Conteúdo da resposta:', response);
         }
       } catch (error) {
         console.error('❌ Erro ao carregar dados do backend:', error);
         // Fallback para dados locais
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -212,6 +224,12 @@ const FinancialPlanningTab = ({ planilhaFinanceiraState, setPlanilhaFinanceiraSt
         </div>
         
         <div className="flex space-x-3">
+          {isLoading && (
+            <div className="flex items-center gap-2 text-blue-400">
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-400"></div>
+              Carregando dados...
+            </div>
+          )}
           <button
             onClick={resetData}
             className="flex items-center space-x-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors"

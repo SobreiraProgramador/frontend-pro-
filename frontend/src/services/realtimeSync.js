@@ -14,7 +14,7 @@ class RealtimeSyncService {
   connect() {
     try {
       const wsUrl = import.meta.env.PROD 
-        ? 'wss://backend-api-production-fd17.up.railway.app'
+        ? 'wss://backend-pro-production-d56a.up.railway.app'
         : 'ws://localhost:3001';
       
       console.log('🔗 Conectando ao WebSocket...', wsUrl);
