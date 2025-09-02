@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { X, Save, DollarSign, Calendar, Tag, FileText } from 'lucide-react';
 
-const NewTransactionModal = ({ isOpen, onClose, onSave }) => {
+const NewTransactionModal = ({ isOpen, onClose, onSave, editingTransaction }) => {
   const [formData, setFormData] = useState({
     description: '',
     amount: '',
@@ -9,6 +9,28 @@ const NewTransactionModal = ({ isOpen, onClose, onSave }) => {
     date: new Date().toISOString().split('T')[0],
     type: 'expense'
   });
+
+  // Se estiver editando, preencher o formulário com os dados da transação
+  React.useEffect(() => {
+    if (editingTransaction) {
+      setFormData({
+        description: editingTransaction.description,
+        amount: Math.abs(editingTransaction.amount).toString(),
+        category: editingTransaction.category,
+        date: editingTransaction.date,
+        type: editingTransaction.type
+      });
+    } else {
+      // Reset form para nova transação
+      setFormData({
+        description: '',
+        amount: '',
+        category: '',
+        date: new Date().toISOString().split('T')[0],
+        type: 'expense'
+      });
+    }
+  }, [editingTransaction]);
 
   const categories = [
     'Renda',
@@ -38,8 +60,8 @@ const NewTransactionModal = ({ isOpen, onClose, onSave }) => {
       return;
     }
 
-    const newTransaction = {
-      id: Date.now(),
+    const transactionData = {
+      id: editingTransaction ? editingTransaction.id : Date.now(),
       description: formData.description,
       amount: formData.type === 'income' ? Math.abs(parseFloat(formData.amount)) : -Math.abs(parseFloat(formData.amount)),
       category: formData.category,
@@ -47,7 +69,7 @@ const NewTransactionModal = ({ isOpen, onClose, onSave }) => {
       type: formData.type
     };
 
-    onSave(newTransaction);
+    onSave(transactionData);
     
     // Reset form
     setFormData({
@@ -68,7 +90,7 @@ const NewTransactionModal = ({ isOpen, onClose, onSave }) => {
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold text-white flex items-center gap-2">
               <DollarSign className="text-green-400" size={24} />
-              Nova Transação
+              {editingTransaction ? 'Editar Transação' : 'Nova Transação'}
             </h2>
             <button
               onClick={onClose}
