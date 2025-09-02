@@ -144,7 +144,7 @@ const TravelsTab = ({
                     <DollarSign className="text-green-400" size={14} />
                     <span className="text-gray-400 text-xs">Orçamento</span>
                   </div>
-                  <span className="text-white font-semibold text-lg">R$ {(viagem.total || viagem.Total || viagem.distotal || 0).toLocaleString()}</span>
+                  <span className="text-white font-semibold text-lg">R$ {(viagem.total_planejado || viagem.total || viagem.Total || viagem.distotal || 0).toLocaleString()}</span>
                 </div>
                 
                 <div className="bg-gray-700/50 rounded-lg p-3">
@@ -152,15 +152,15 @@ const TravelsTab = ({
                     <Hotel className="text-blue-400" size={14} />
                     <span className="text-gray-400 text-xs">Hospedagem</span>
                   </div>
-                  <span className="text-white font-semibold text-lg">R$ {(viagem.hospedagem || viagem.Hospedagem || 0).toLocaleString()}</span>
+                  <span className="text-white font-semibold text-lg">R$ {(viagem.hospedagem_planejado || viagem.hospedagem || viagem.Hospedagem || 0).toLocaleString()}</span>
                 </div>
               </div>
 
               {/* Orçamento Total Planejado */}
-              <div className="bg-gray-700/50 rounded-lg p-3">
+                              <div className="bg-gray-700/50 rounded-lg p-3">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-gray-400 text-sm font-medium">Orçamento total:</span>
-                  <span className="text-blue-400 font-semibold">R$ {(viagem.total || viagem.Total || viagem.distotal || 0).toLocaleString()}</span>
+                  <span className="text-blue-400 font-semibold">R$ {(viagem.total_planejado || viagem.total || viagem.Total || viagem.distotal || 0).toLocaleString()}</span>
                 </div>
                 <div className="flex items-center justify-between text-xs text-gray-500">
                   <span>Planejamento base</span>
@@ -401,7 +401,7 @@ const TravelsTab = ({
                   <div className="space-y-3">
                     <div className="flex justify-between items-center">
                       <span className="text-gray-400">Planejado:</span>
-                      <span className="text-blue-400 font-semibold">R$ {(viagem.total || viagem.Total || viagem.distotal || 0).toLocaleString()}</span>
+                      <span className="text-blue-400 font-semibold">R$ {(viagem.total_planejado || viagem.total || viagem.Total || viagem.distotal || 0).toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-gray-400">Realizado:</span>

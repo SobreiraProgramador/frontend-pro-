@@ -32,12 +32,41 @@ const GoalsSetupModal = ({ isOpen, onClose, onSaveGoals, metaData, totalGoals })
     setEditingGoal(null);
   };
 
-  const handleGoalToggle = (goalId) => {
-    setGoals(prev => prev.map(goal => 
-      goal.id === goalId 
-        ? { ...goal, done: !goal.done }
-        : goal
-    ));
+  const handleGoalToggle = async (goalId) => {
+    try {
+      const updatedGoals = goals.map(goal => 
+        goal.id === goalId 
+          ? { ...goal, done: !goal.done }
+          : goal
+      );
+      
+      // Atualizar estado local imediatamente
+      setGoals(updatedGoals);
+      
+      // Se temos metaData, salvar no backend
+      if (metaData && metaData.id) {
+        try {
+          // Converter goals para JSON strings para salvar no backend
+          const goalsAsStrings = updatedGoals.map(goal => JSON.stringify(goal));
+          const progress = Math.round((updatedGoals.filter(g => g.done).length / updatedGoals.length) * 100);
+          
+          await apiService.goals.update(metaData.id, {
+            goals: goalsAsStrings,
+            progress: progress
+          });
+          console.log('✅ Progresso dos goals salvo no backend');
+        } catch (error) {
+          console.error('❌ Erro ao salvar no backend:', error);
+          // Reverter mudança local se falhar no backend
+          setGoals(goals);
+          alert('Erro ao salvar progresso. Tente novamente.');
+          return;
+        }
+      }
+    } catch (error) {
+      console.error('❌ Erro ao atualizar goal:', error);
+      alert('Erro ao atualizar goal. Tente novamente.');
+    }
   };
 
   const handleSaveAllGoals = () => {

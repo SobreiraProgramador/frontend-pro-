@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Plus, MoreVertical, Target, Clock, TrendingUp, Edit, X, Check, ChevronUp } from 'lucide-react';
 import { formatDate } from '../../utils/formatters';
 import apiService from '../../services/api';
@@ -9,6 +9,15 @@ const ProjectsTab = ({ projects, setProjects, draggedItem, setDraggedItem, showA
   const [expandedGoals, setExpandedGoals] = useState({});
   const [newSubGoalInputs, setNewSubGoalInputs] = useState({});
   const [showAddSubGoal, setShowAddSubGoal] = useState({});
+
+  // Sincronizar dados do backend sempre que projects mudar
+  useEffect(() => {
+    if (projects && projects.length > 0) {
+      console.log('🔄 [ProjectsTab] Dados sincronizados do backend:', projects.length, 'projetos');
+      // Forçar re-render para atualizar visual
+      setExpandedGoals(prev => ({ ...prev }));
+    }
+  }, [projects]);
 
   // Função para processar sub-objetivos (parsear JSON strings)
   const processSubGoals = (project) => {
