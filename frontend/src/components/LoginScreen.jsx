@@ -99,15 +99,7 @@ const LoginScreen = ({ onLogin, onSwitchToRegister }) => {
       onLogin(loginData);
     } catch (error) {
       console.error('❌ [QUICK LOGIN] Erro no login real:', error);
-      // Fallback para mock apenas se falhar
-      const mockUser = {
-        id: 1,
-        name: 'Usuário Teste',
-        email: 'teste@teste.com',
-        token: 'mock-token-for-testing'
-      };
-      console.log('⚠️ [QUICK LOGIN] Usando fallback mock');
-      onLogin(mockUser);
+      alert('❌ Login falhou. Verifique as credenciais ou registre-se primeiro.');
     }
   };
 

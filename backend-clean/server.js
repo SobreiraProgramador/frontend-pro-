@@ -950,6 +950,12 @@ app.put('/api/goals/:id', authenticateToken, async (req, res) => {
       }
       
       // Atualizar a meta
+      console.log('🔍 [PUT GOALS] Dados recebidos para atualização:', req.body);
+      console.log('🔍 [PUT GOALS] Goals recebidos:', req.body.goals);
+      console.log('🔍 [PUT GOALS] Goals recebidos (JSON):', JSON.stringify(req.body.goals));
+      console.log('🔍 [PUT GOALS] Tipo dos goals:', typeof req.body.goals);
+      console.log('🔍 [PUT GOALS] É array?', Array.isArray(req.body.goals));
+      
       const updatedGoal = await db.goal.update({
         where: { id: req.params.id },
         data: {
@@ -960,9 +966,13 @@ app.put('/api/goals/:id', authenticateToken, async (req, res) => {
           dueDate: req.body.dueDate ? new Date(req.body.dueDate) : existingGoal.dueDate,
           estimatedHours: req.body.estimatedHours !== undefined ? req.body.estimatedHours : existingGoal.estimatedHours,
           status: req.body.status || existingGoal.status,
-          priority: req.body.priority || existingGoal.priority
+          priority: req.body.priority || existingGoal.priority,
+          goals: req.body.goals || existingGoal.goals
         }
       });
+      
+      console.log('🔍 [PUT GOALS] Meta atualizada no banco:', updatedGoal);
+      console.log('🔍 [PUT GOALS] Goals salvos no banco:', updatedGoal.goals);
       
       console.log('✅ Meta atualizada com sucesso');
       res.json({ data: updatedGoal });
@@ -1290,7 +1300,38 @@ app.get('/api/projects', authenticateToken, async (req, res) => {
       const projects = await db.project.findMany({
         where: { userId: req.user.userId }
       });
-      res.json(projects);
+      
+      // Buscar metas relacionadas e incluir goals nos projetos
+      const projectsWithGoals = await Promise.all(projects.map(async (project) => {
+        console.log('🔍 [GET PROJECTS] Processando projeto:', project.title, 'goalId:', project.goalId);
+        
+        if (project.goalId) {
+          const goal = await db.goal.findFirst({
+            where: { 
+              id: project.goalId,
+              userId: req.user.userId 
+            }
+          });
+          
+          console.log('🔍 [GET PROJECTS] Meta encontrada:', goal ? 'SIM' : 'NÃO');
+          if (goal) {
+            console.log('🔍 [GET PROJECTS] Goals da meta:', goal.goals);
+            console.log('🔍 [GET PROJECTS] Goals da meta (JSON):', JSON.stringify(goal.goals));
+            console.log('🔍 [GET PROJECTS] Tipo dos goals:', typeof goal.goals);
+            console.log('🔍 [GET PROJECTS] É array?', Array.isArray(goal.goals));
+            console.log('🔍 [GET PROJECTS] Progresso da meta:', goal.progress);
+            
+            return {
+              ...project,
+              goals: goal.goals, // Incluir goals da meta relacionada
+              progress: goal.progress // Usar progresso da meta
+            };
+          }
+        }
+        return project;
+      }));
+      
+      res.json(projectsWithGoals);
     } else {
       // Mock data
       res.json([

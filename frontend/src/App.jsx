@@ -449,6 +449,8 @@ const App = () => {
 
   // Função para sincronizar progresso entre metas e projetos
   const syncGoalProgress = (goalId, updatedGoal) => {
+    console.log('🔄 [SYNC] Iniciando sincronização:', { goalId, updatedGoal });
+    
     // Atualizar a meta localmente
     setGoals(prevGoals => 
       prevGoals.map(goal => 
@@ -470,10 +472,14 @@ const App = () => {
     // Salvar atualização no backend
     const updateGoalInBackend = async () => {
       try {
-        await apiService.goals.update(goalId, updatedGoal);
-        console.log('✅ Progresso sincronizado no backend');
+        console.log('🔄 [SYNC] Enviando para backend:', { goalId, updatedGoal });
+        console.log('🔄 [SYNC] Goals sendo enviados:', updatedGoal.goals);
+        console.log('🔄 [SYNC] Goals JSON:', JSON.stringify(updatedGoal.goals));
+        const result = await apiService.goals.update(goalId, updatedGoal);
+        console.log('✅ [SYNC] Progresso sincronizado no backend:', result);
       } catch (error) {
-        console.error('❌ Erro ao sincronizar no backend:', error);
+        console.error('❌ [SYNC] Erro ao sincronizar no backend:', error);
+        console.error('❌ [SYNC] Detalhes do erro:', error.message);
       }
     };
 

@@ -14,6 +14,17 @@ const ProjectsTab = ({ projects, setProjects, draggedItem, setDraggedItem, showA
   useEffect(() => {
     if (projects && projects.length > 0) {
       console.log('🔄 [ProjectsTab] Dados sincronizados do backend:', projects.length, 'projetos');
+      projects.forEach(project => {
+        console.log('📋 [ProjectsTab] Projeto:', project.title);
+        console.log('📋 [ProjectsTab] Goals raw:', project.goals);
+        console.log('📋 [ProjectsTab] Goals raw (JSON):', JSON.stringify(project.goals));
+        const processedGoals = processSubGoals(project);
+        console.log('📋 [ProjectsTab] Goals processados:', processedGoals);
+        processedGoals.forEach(goal => {
+          console.log(`📋 [ProjectsTab] Sub-goal: ${goal.title} - done: ${goal.done}`);
+          console.log(`📋 [ProjectsTab] Sub-goal completo:`, goal);
+        });
+      });
       // Forçar re-render para atualizar visual
       setExpandedGoals(prev => ({ ...prev }));
     }
@@ -148,13 +159,19 @@ const ProjectsTab = ({ projects, setProjects, draggedItem, setDraggedItem, showA
   };
 
   const updateGoalProgress = async (goalId, subGoalId) => {
+    console.log('🎯 [PROGRESS] Iniciando atualização:', { goalId, subGoalId });
+    
     const updatedGoals = projects.map(goal => {
       if (goal.id === goalId) {
         // Processar sub-objetivos existentes
         const currentSubGoals = processSubGoals(goal);
+        console.log('🎯 [PROGRESS] Sub-objetivos atuais:', currentSubGoals);
+        
         const updatedSubGoals = currentSubGoals.map(subGoal => {
           if (subGoal.id === subGoalId) {
-            return { ...subGoal, done: !subGoal.done };
+            const newSubGoal = { ...subGoal, done: !subGoal.done };
+            console.log('🎯 [PROGRESS] Sub-objetivo atualizado:', newSubGoal);
+            return newSubGoal;
           }
           return subGoal;
         });
@@ -165,11 +182,14 @@ const ProjectsTab = ({ projects, setProjects, draggedItem, setDraggedItem, showA
         // Converter de volta para JSON strings para salvar no backend
         const goalsAsStrings = updatedSubGoals.map(subGoal => JSON.stringify(subGoal));
         
-        return {
+        const updatedGoal = {
           ...goal,
           goals: goalsAsStrings,
           progress: progress
         };
+        
+        console.log('🎯 [PROGRESS] Goal atualizado:', updatedGoal);
+        return updatedGoal;
       }
       return goal;
     });
@@ -180,6 +200,7 @@ const ProjectsTab = ({ projects, setProjects, draggedItem, setDraggedItem, showA
     if (syncGoalProgress) {
       const goal = updatedGoals.find(g => g.id === goalId);
       if (goal) {
+        console.log('🎯 [PROGRESS] Chamando syncGoalProgress com:', goal);
         await syncGoalProgress(goalId, goal);
       }
     }
@@ -454,33 +475,36 @@ const ProjectsTab = ({ projects, setProjects, draggedItem, setDraggedItem, showA
                         {/* Lista de sub-objetivos */}
                         {processSubGoals(project).length > 0 && expandedGoals[project.id] !== false && (
                           <div className="space-y-2">
-                            {processSubGoals(project).map((subGoal, index) => (
-                              <div 
-                                key={subGoal.id} 
-                                className="group flex items-center gap-3 p-2 rounded-lg hover:bg-gray-700/30 transition-all duration-200 cursor-pointer"
-                                onClick={() => updateGoalProgress(project.id, subGoal.id)}
-                              >
-                                {/* Checkbox moderno */}
-                                <div className={`relative w-5 h-5 rounded-full border-2 transition-all duration-200 flex items-center justify-center ${
-                                  subGoal.done
-                                    ? 'bg-green-500 border-green-500 shadow-lg'
-                                    : 'bg-transparent border-gray-400 group-hover:border-green-400'
-                                }`}>
-                                  {subGoal.done && (
-                                    <Check className="w-3 h-3 text-white" />
-                                  )}
-                                </div>
+                            {processSubGoals(project).map((subGoal, index) => {
+                              console.log(`🎨 [RENDER] Renderizando sub-goal: ${subGoal.title} - done: ${subGoal.done}`);
+                              return (
+                                <div 
+                                  key={subGoal.id} 
+                                  className="group flex items-center gap-3 p-2 rounded-lg hover:bg-gray-700/30 transition-all duration-200 cursor-pointer"
+                                  onClick={() => updateGoalProgress(project.id, subGoal.id)}
+                                >
+                                  {/* Checkbox moderno */}
+                                  <div className={`relative w-5 h-5 rounded-full border-2 transition-all duration-200 flex items-center justify-center ${
+                                    subGoal.done
+                                      ? 'bg-green-500 border-green-500 shadow-lg'
+                                      : 'bg-transparent border-gray-400 group-hover:border-green-400'
+                                  }`}>
+                                    {subGoal.done && (
+                                      <Check className="w-3 h-3 text-white" />
+                                    )}
+                                  </div>
                                 
-                                {/* Texto do sub-objetivo */}
-                                <span className={`text-sm flex-1 transition-all duration-200 ${
-                                  subGoal.done 
-                                    ? 'text-gray-400 line-through' 
-                                    : 'text-white'
-                                }`}>
-                                  {subGoal.title}
-                                </span>
-                              </div>
-                            ))}
+                                  {/* Texto do sub-objetivo */}
+                                  <span className={`text-sm flex-1 transition-all duration-200 ${
+                                    subGoal.done 
+                                      ? 'text-gray-400 line-through' 
+                                      : 'text-white'
+                                  }`}>
+                                    {subGoal.title}
+                                  </span>
+                                </div>
+                              );
+                            })}
                           </div>
                         )}
                       </div>

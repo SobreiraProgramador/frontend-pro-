@@ -19,8 +19,6 @@ const FinancesTab = ({
   setPlanilhaFinanceiraState
 }) => {
   const [showNewTransactionModal, setShowNewTransactionModal] = useState(false);
-  const [showCardsView, setShowCardsView] = useState(false);
-  const [editingTransaction, setEditingTransaction] = useState(null);
   const [selectedYear, setSelectedYear] = useState(2026);
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
   
@@ -77,27 +75,15 @@ const FinancesTab = ({
 
   const addNewTransaction = async (transaction) => {
     try {
-      if (editingTransaction) {
-        // Atualizar transação existente
-        const updatedTransaction = await apiService.finances.update(transaction.id, transaction);
-        setFinances(prev => prev.map(t => t.id === transaction.id ? updatedTransaction.data : t));
-      } else {
-        // Criar nova transação
-        const savedTransaction = await apiService.finances.create(transaction);
-        setFinances(prev => [...prev, savedTransaction.data]);
-      }
+      // Salvar no backend
+      const savedTransaction = await apiService.finances.create(transaction);
+      setFinances(prev => [...prev, savedTransaction.data]);
     } catch (error) {
       console.error('❌ Erro ao salvar transação no backend:', error);
       alert('❌ Erro ao salvar transação. Verifique sua conexão.');
       return; // Não salvar localmente se backend falhar
     }
     setShowNewTransactionModal(false);
-    setEditingTransaction(null);
-  };
-
-  const handleEditTransaction = (transaction) => {
-    setEditingTransaction(transaction);
-    setShowNewTransactionModal(true);
   };
 
   const renderTransactions = () => {
@@ -199,78 +185,6 @@ const FinancesTab = ({
             ))}
           </div>
           </div>
-        </div>
-
-        {/* Sub-aba para Cards das Transações */}
-        <div className="bg-gray-800/40 backdrop-blur-md rounded-xl p-4 md:p-6 shadow-lg border border-gray-700/30">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-white font-semibold text-lg">Visualização em Cards</h3>
-            <button 
-              onClick={() => setShowCardsView(!showCardsView)}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
-            >
-              {showCardsView ? 'Ocultar Cards' : 'Mostrar Cards'}
-            </button>
-          </div>
-          
-          {showCardsView && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-              {finances.slice(-12).reverse().map((transaction) => (
-                <div 
-                  key={`card-${transaction.id}`} 
-                  className="bg-gray-700/40 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all transform hover:-translate-y-1 cursor-pointer border border-gray-600/30"
-                >
-                  {/* Header do Card */}
-                  <div className={`h-20 ${transaction.type === 'income' ? 'bg-green-600' : 'bg-red-600'} relative overflow-hidden`}>
-                    <div className="absolute inset-0 bg-black bg-opacity-20"></div>
-                    <div className="absolute top-3 right-3">
-                      <span className={`${transaction.type === 'income' ? 'bg-green-500' : 'bg-red-500'} bg-opacity-90 text-white px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1`}>
-                        {transaction.type === 'income' ? '↗' : '↘'} 
-                        {transaction.type === 'income' ? 'Receita' : 'Despesa'}
-                      </span>
-                    </div>
-                    <div className="absolute bottom-3 left-3 right-3">
-                      <div className="flex items-center gap-2 text-white text-sm opacity-90">
-                        <Calendar size={14} />
-                        <span>{new Date(transaction.date).toLocaleDateString('pt-BR')}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Corpo do Card */}
-                  <div className="p-4 space-y-3">
-                    {/* Descrição */}
-                    <div className="text-center">
-                      <h4 className="font-bold text-white text-lg mb-1 line-clamp-2">{transaction.description}</h4>
-                      <span className="bg-gray-600/50 text-gray-300 px-2 py-1 rounded-full text-xs font-medium">
-                        {transaction.category || 'Sem categoria'}
-                      </span>
-                    </div>
-
-                    {/* Valor */}
-                    <div className="text-center">
-                      <span className={`text-2xl font-bold ${transaction.type === 'income' ? 'text-green-400' : 'text-red-400'}`}>
-                        {formatCurrency(Math.abs(transaction.amount))}
-                      </span>
-                    </div>
-
-                    {/* Botão Editar Transação */}
-                    <div className="pt-2">
-                      <button 
-                        className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-colors text-sm font-medium"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleEditTransaction(transaction);
-                        }}
-                      >
-                        Editar Transação
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
         </div>
       </div>
     );
@@ -496,12 +410,8 @@ const FinancesTab = ({
       {showNewTransactionModal && (
         <NewTransactionModal 
           isOpen={showNewTransactionModal}
-          onClose={() => {
-            setShowNewTransactionModal(false);
-            setEditingTransaction(null);
-          }}
+          onClose={() => setShowNewTransactionModal(false)}
           onSave={addNewTransaction}
-          editingTransaction={editingTransaction}
         />
       )}
     </div>
